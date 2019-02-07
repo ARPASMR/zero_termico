@@ -1,16 +1,13 @@
 ######################################################################################
 #  codice per estrarre i dati di temperatura di alcune stazioni scelte
 #  e produrre i grafici con evidenza dello zero termico
-#  
+#
 #  EB & MR 18/12/2018
 ######################################################################################
 
 #--------------------------------------------------------------------------------
 inizio <- Sys.Date()-1
-fine <- Sys.Date() 
-#dir<-"//10.10.49.211/meteo/Progetti/AlternanzaScuolaLavoro/2019/"
-dir<-"/home/meteo/sviluppo/zero_T/"
-aree <- c("Prealpi_Varesine", "Lario","Prealpi_Centrali", "Val_Chiavenna","Valtellina", "Alta_Valtellina","Prealpi_Orientali","Pianura_Orientale","Pianura_Occidentale","Appennino")
+fine <- Sys.Date()
 colore <- c("black","red","purple","green","blue","violet","cyan","brown","blue")
 #------------------------------------------------------------------------------
 
@@ -28,8 +25,11 @@ options(show.error.messages=TRUE,error=neverstop)
 Tini<-as.POSIXct(strptime(inizio,format="%Y-%m-%d"),"UTC")
 Tfin<-as.POSIXct(strptime(fine,format="%Y-%m-%d"),"UTC")
 
+# lettura aree
+aree<-system("ls -1 *.csv",intern=T)
+
 ################ impostazione dei grafici
-nome_pdf <- paste(dir,"/","aree.pdf",sep="")
+nome_pdf <- paste(inizio,".pdf",sep="")
 pdf(nome_pdf,width=8,height=40,bg = "white",paper="special")
 nf<-layout(matrix(c(1,2,3,4,5,6,7,8,9,10),10,1, byrow = TRUE))
 par(mar = c(2,5,2,20))
@@ -51,14 +51,14 @@ if (inherits(conn,"try-error")) {
 # ciclo sulle aree
 area <- 1
 while (area<length(aree)+1){
-  
+
 #lettura del file
- lettura<-read.csv (paste(dir,aree[area],'.csv', sep="" ),sep=";")
+ lettura<-read.csv (aree[area])
  IDsensore<-lettura$IdSensore
  Nome<-paste(lettura$Comune,lettura$Attributo,sep=" ")
  Quota<-lettura$Quota
- 
- #ciclo sui sensori: richiesta dati e calcolo massimi e minimi per grafico 
+
+ #ciclo sui sensori: richiesta dati e calcolo massimi e minimi per grafico
  tmin <- 100
  tmax <- -100
  n<-1
@@ -71,7 +71,7 @@ while (area<length(aree)+1){
    tmax <- max(tmax,temperatura, na.rm=T)
    n <- n + 1
  }
-  
+
  # impostazione grafico
    plot(Tini,0,ylim=c(tmin,tmax), xlim=c(Tini,Tfin),type="n", main=aree[area], xaxt='n',  yaxt='n',xlab='', ylab='Temp (C)')
    par(xpd=F) # impedisco di uscire dall'area del grafico
@@ -86,7 +86,7 @@ while (area<length(aree)+1){
         labels   = ticchi    ,
         cex.axis = 1.3       ,   # dimensioni LABELS
         mgp      = c(0.4,1,0))
-   
+
    #asse x
    sequenza    <- seq(Tini, Tfin, by = "6 hours")
    giornaliere <- format(seq(Tini, Tfin, by = "6 hours"),"%a %H")
@@ -96,18 +96,18 @@ while (area<length(aree)+1){
         col     = 'black'      ,   # colore ASSE
         labels  =  giornaliere ,   # SCRITTE
         at      =  sequenza    )   # posizione SCRITTE
-   
-   
+
+
     #linee verticali
     par(xpd=F)  # impedisco di uscire dall'area del grafico
-    abline(v=seq(Tini, Tfin, by="12 hours"   ),         
-          lty = 1,                                     
+    abline(v=seq(Tini, Tfin, by="12 hours"   ),
+          lty = 1,
           col = 'gray')
-    abline(v=seq(Tini, Tfin, by="6 hours"),           
-          lty = 2,                                   
+    abline(v=seq(Tini, Tfin, by="6 hours"),
+          lty = 2,
           col='gray')
-   
- #ciclo sui sensori: richiesta dati e grafico 
+
+ #ciclo sui sensori: richiesta dati e grafico
  n<-1
    while(n<length(IDsensore)+1){
 
@@ -116,7 +116,7 @@ while (area<length(aree)+1){
    result_query<-try(dbGetQuery(conn,query), silent=TRUE)
    data<-as.POSIXct(strptime(result_query$Data_e_ora,format="%Y-%m-%d %H:%M:%S"),"UTC")
    temperatura<-result_query$Misura
-  
+
    if(length(temperatura)>0){         # se ci sono i dati eseguo il grafico
      lines(data,temperatura,col=colore[n])
      #legenda
@@ -137,19 +137,16 @@ while (area<length(aree)+1){
    }
    n <- n + 1
    }
- 
+
  area <- area + 1
 }
 
 ###############################################
 
-# disconnessione dal DB 
+# disconnessione dal DB
 RetCode<-try(dbDisconnect(conn),silent=TRUE)
 if (inherits(RetCode,"try-error")) {
   quit(status=1)
 }
 rm(conn)
 dbUnloadDriver(drv)
-
-
-
