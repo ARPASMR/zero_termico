@@ -8,7 +8,7 @@
 #--------------------------------------------------------------------------------
 inizio <- Sys.Date()-1
 fine <- Sys.Date()
-colore <- c("black","red","purple","green","blue","violet","cyan","brown","blue")
+colore <- c("chocolate4","chartreuse4","darkolivegreen2","cadetblue2","blue","blue4","black","black","black")
 #------------------------------------------------------------------------------
 
 library(DBI)
@@ -37,7 +37,7 @@ par(mar = c(2,5,2,20))
 
 # connessione al DB
 drv<-dbDriver("MySQL")
-conn<-try(dbConnect(drv, user="guardone", password="guardone", dbname="METEO", host="10.10.0.6"))
+conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.6"))
 if (inherits(conn,"try-error")) {
   print( "ERRORE nell'apertura della connessione al DB \n")
   print( "chiusura connessione malriuscita ed uscita dal programma \n")
@@ -52,8 +52,10 @@ if (inherits(conn,"try-error")) {
 area <- 1
 while (area<length(aree)+1){
 
-#lettura del file
- lettura<-read.csv (aree[area])
+ #lettura del file
+ pre_lettura<-read.csv(aree[area],sep=";")
+ # ordino per quota
+ lettura<-pre_lettura[order(pre_lettura$Quota),]
  IDsensore<-lettura$IdSensore
  Nome<-paste(lettura$Comune,lettura$Attributo,sep=" ")
  Quota<-lettura$Quota
@@ -112,9 +114,9 @@ while (area<length(aree)+1){
    while(n<length(IDsensore)+1){
 
    # richiesta dati
-   query= paste('select Data_e_ora, Misura from M_Osservazioni_TR where IDsensore =',IDsensore[n],' and Data_e_ora>"',Tini,'" and Data_e_ora<"',Tfin,'";',sep="")
+   query= paste('select Data_e_ora, Misura from M_Osservazioni_TR where IDsensore =',IDsensore[n],' and IDoperatore=1 and Data_e_ora>"',Tini,'" and Data_e_ora<"',Tfin,'";',sep="")
    result_query<-try(dbGetQuery(conn,query), silent=TRUE)
-   data<-as.POSIXct(strptime(result_query$Data_e_ora,format="%Y-%m-%d %H:%M:%S"),"UTC")
+   data<-as.POSIXct(strptime(result_query$Data_e_ora,format="%Y-%m-%d %H:%M"),"UTC")
    temperatura<-result_query$Misura
 
    if(length(temperatura)>0){         # se ci sono i dati eseguo il grafico

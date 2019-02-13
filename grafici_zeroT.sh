@@ -35,7 +35,7 @@ putS3() {
 while [ 1 ]
 do
 # procedi sono se sono le 6
-if [ $(date +"%H") == "06" ];
+if [ $(date +"%H") == "14" ];
 then
    Rscript $ZEROT_R
 
@@ -47,7 +47,7 @@ then
    then
        exit 1
    else # caricamento su MINIO
-       putS3 . *.png zeroT/ rete-monitoraggio
+       putS3 . *.pdf zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
        if [ $? -ne 0 ]
@@ -57,8 +57,8 @@ then
        fi
    fi
 
-   rm -f *.png
-   sleep $numsec
+   rm -f *.pdf
+   sleep 86400 # 1 giorno
 fi
 done
 exit 0
