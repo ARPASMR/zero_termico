@@ -1,0 +1,5 @@
+﻿wkt_geom;NomeReteVi;Comune;Attributo;IdSensore;Quota;UTM Nord;UTM Est
+Point (561195 5111566);IdroNivoMeteo;Caiolo;-9999;4017;274;5111566;561195
+Point (545980 5121270);IdroNivoMeteo;Val Masino;Bagni;10570;1191;5121270;545980
+Point (566553 5126798);Rete Centro Monitoraggio Geologico Sondrio;Chiesa in Valmalenco;Funivia Bernina;54;2014;5126798;566553
+Point (558743 5130048);IdroNivoMeteo;Lanzada;Passo Marinelli;14221;3032;5133321;570414
