@@ -9,7 +9,8 @@
 # 2019/02/07 MR
 #=============================================================================
 
-ZEROT_R='grafici_zeroT.R'
+ZEROT_R='zeroTlevelplot.R'
+
 
 putS3() {
   path=$1
@@ -35,7 +36,7 @@ putS3() {
 while [ 1 ]
 do
 # procedi sono se sono le 6
-if [ $(date +"%H") == "14" ];
+if [ $(date "+%H") == "14" ];
 then
    Rscript $ZEROT_R
 
