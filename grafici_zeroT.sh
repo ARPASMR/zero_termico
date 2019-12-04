@@ -35,8 +35,8 @@ putS3() {
 #
 while [ 1 ]
 do
-# procedi sono se sono le 6
-if [ $(date "+%H") == "14" ];
+# procedi sono se sono le 15
+if [ $(date "+%H") == "15" ];
 then
    Rscript $ZEROT_R
 
