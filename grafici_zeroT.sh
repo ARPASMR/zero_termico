@@ -48,7 +48,7 @@ then
    then
        exit 1
    else # caricamento su MINIO
-       putS3 . *.pdf zeroT/ rete-monitoraggio
+       putS3 . *.png zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
        if [ $? -ne 0 ]
@@ -58,7 +58,7 @@ then
        fi
    fi
 
-   rm -f *.pdf
+   rm -f *.png
    sleep 86400 # 1 giorno
 fi
 done
