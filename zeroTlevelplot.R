@@ -30,7 +30,8 @@ time<-as.POSIXct(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 hour"))
 
 
 ################ impostazione dei grafici
-nome_png <- paste("zeroT_",inizio,".png",sep="")
+#nome_png <- paste("zeroT_",inizio,".png",sep="")
+nome_png<-"zeroT.png"
 png(nome_png, width = 1500, height = 1000)
 
 # connessione al DB
