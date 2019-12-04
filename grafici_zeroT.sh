@@ -35,8 +35,8 @@ putS3() {
 #
 while [ 1 ]
 do
-# procedi sono se sono le 15
-if [ $(date "+%H") == "15" ];
+# procedi sono se sono le 6
+if [ $(date "+%H") == "06" ];
 then
    Rscript $ZEROT_R
 
@@ -59,8 +59,7 @@ then
    fi
 
    rm -f *.png
-   #sleep 86400 # 1 giorno
-   sleep 600
+   sleep 86400 # 1 giorno
 fi
 done
 exit 0
