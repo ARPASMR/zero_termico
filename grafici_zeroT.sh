@@ -59,7 +59,8 @@ then
    fi
 
    rm -f *.png
-   sleep 86400 # 1 giorno
+   #sleep 86400 # 1 giorno
+   sleep 600
 fi
 done
 exit 0
