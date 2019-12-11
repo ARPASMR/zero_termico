@@ -78,7 +78,7 @@ if (inherits(conn,"try-error")) {
    query='select IDsensore, Quota from A_Sensori,A_Stazioni where A_Sensori.IDstazione=A_Stazioni.IDstazione and DataInizio is not NULL and IDrete in (1,2,4) and NOMEtipologia="PP" and Storico="No" and IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) order by Quota;'
    result_query<-try(dbGetQuery(conn,query), silent=TRUE)
    IDsens <- result_query$IDsensore
-   Quota <- result_query$Quota
+   Quota_PP <- result_query$Quota
 
  #ciclo sui sensori: richiesta dati
  n<-1
