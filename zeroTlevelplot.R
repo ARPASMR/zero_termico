@@ -7,8 +7,8 @@
 ######################################################################################
 
 #--------------------------------------------------------------------------------
-inizio <- Sys.Date()-15
-fine <- Sys.Date()
+inizio <- Sys.Date()-11
+fine <- Sys.Date()+1
 #------------------------------------------------------------------------------
 
 library(DBI)
@@ -30,8 +30,8 @@ time<-as.POSIXct(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 hour"))
 
 
 ################ impostazione dei grafici
-#nome_png <- paste("zeroT_",inizio,".png",sep="")
-nome_png<-"zeroT.png"
+nome_png <- paste("zeroT_",fine,"_pianura.png",sep="")
+#nome_png<-"zeroT.png"
 png(nome_png, width = 1500, height = 1000)
 
 # connessione al DB
@@ -53,16 +53,16 @@ if (inherits(conn,"try-error")) {
    zmin <- result_queryLinate$zmin
    zmax <- result_queryLinate$zmax
 
-   temperatura_tot<-vector()
-    query='select IDsensore, Quota from A_Sensori,A_Stazioni where A_Sensori.IDstazione=A_Stazioni.IDstazione and DataInizio is not NULL and IDrete in (1,2,4) and NOMEtipologia="T" and Storico="No" and IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) order by Quota;'
+########## LETTURA DELLE TEMPERATURE
+ temperatura_tot<-vector()
+   query='select IDsensore, Quota from A_Sensori,A_Stazioni where A_Sensori.IDstazione=A_Stazioni.IDstazione and DataInizio is not NULL and IDrete in (1,2,4) and NOMEtipologia="T" and Storico="No" and IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) order by Quota;'
    result_query<-try(dbGetQuery(conn,query), silent=TRUE)
    IDsens <- result_query$IDsensore
    Quota <- result_query$Quota
 
- #ciclo sui sensori: richiesta dati
  n<-1
  while(n<length(IDsens)+1){
-   query= paste('select Data_e_ora, Misura from M_Termometri where IDsensore=',IDsens[n],' and Data_e_ora>"',Tini,'" and Data_e_ora<="',Tfin,'" ;',sep="")
+   query= paste('select Data_e_ora, Misura from M_Termometri where Flag_manuale in ("M","G") and IDsensore=',IDsens[n],' and Data_e_ora>"',Tini,'" and Data_e_ora<="',Tfin,'" ;',sep="")
 
    result_query<-try(dbGetQuery(conn,query), silent=TRUE)
    temperatura <- result_query$Misura
@@ -73,27 +73,51 @@ if (inherits(conn,"try-error")) {
    n <- n + 1
  }
 
+########## LETTURA DELLE PRECIPITAZIONI 
+  precipitazioni_tot<-vector()
+   query='select IDsensore, Quota from A_Sensori,A_Stazioni where A_Sensori.IDstazione=A_Stazioni.IDstazione and DataInizio is not NULL and IDrete in (1,2,4) and NOMEtipologia="PP" and Storico="No" and IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) order by Quota;'
+   result_query<-try(dbGetQuery(conn,query), silent=TRUE)
+   IDsens <- result_query$IDsensore
+   Quota <- result_query$Quota
+
+ #ciclo sui sensori: richiesta dati
+ n<-1
+ while(n<length(IDsens)+1){
+   query= paste('select Data_e_ora, Misura from M_Pluviometri where Flag_manuale in ("M","G") and IDsensore=',IDsens[n],' and Data_e_ora>"',Tini,'" and Data_e_ora<="',Tfin,'" ;',sep="")
+
+   result_query<-try(dbGetQuery(conn,query), silent=TRUE)
+   precipitazioni <- result_query$Misura
+   data<-as.POSIXct(strptime(result_query$Data_e_ora,format="%Y-%m-%d %H:%M"),"UTC")
+   # assegno NA alle precipitazioni mancanti
+   precipitazioni[!time %in% data]<-NA
+   precipitazioni_tot <- c(precipitazioni_tot,precipitazioni)
+   n <- n + 1
+ }
+
+
+# Plot
   gdr<-expand.grid(xvar=time,yvar=Quota)
   gdr$zvar <- temperatura_tot
 
-# Plot
 myPanel <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
                 panel.levelplot(x=x, y=y, z=z, ..., subscripts=subscripts)
- #              panel.abline(h = Quota, col="black")
-                panel.lines(dataLinate,zmax, col="black",lty=1,pch=16,cex=3)
-                panel.lines(dataLinate,zmin, col="black",ltw=2,pch=16,cex=3)
-                na<-is.na(z[subscripts])
-                panel.text(x = x[subscripts[na]],
-                y = y[subscripts[na]],
-             #   labels = round(z[subscripts[na]], 1))
-                labels = "X")
-                }
+#               panel.abline(h = Quota_N, col="black")
+                panel.abline(v = as.POSIXct(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day")) , col="black")  # linee verticali
+                panel.lines(dataLinate,log(zmax,base=10), col="black",lty=1,lwd=2)                             # zeroT da radiosondaggio
+                panel.lines(dataLinate,log(zmin,base=10), col="black",ltw=2,lwd=2)                             # zeroT da radiosondaggio
+                na<-is.na(z[subscripts])                                                                       # trattino su mancanti
+                panel.text(x = x[subscripts[na]], y = y[subscripts[na]], labels = "-",cex=1.5)
+                pp<-which(precipitazioni_tot>1)                                                                # pallino sui precipitazioni
+                panel.text(x = x[pp], y = y[pp], labels = "o")
+               }
 
         p<-levelplot (zvar ~ xvar * yvar, data = gdr,
          panel=myPanel,
-         at= unique(c(seq(-25, -1, length=11),c(seq(-1, 1, length=11)),  c(seq(1, 25, length=11)))),
-         col.regions = colorRampPalette(c('blue','white','red')),
-         xlab='Data',ylab='Quota (m)')
+         scales=list(y=list(log=TRUE,cex=1 , at=c(10,50,100,200,300,400,500,600,800,1000,1200,1400,1600,1800,2000,2500) ),x=list(at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
+         at= unique(c(seq(-20, -1, length=30),c(seq(-1, 1, length=11)),  c(seq(1, 20, length=30)))),
+         main="TEMPERATURE e PRECIPITAZIONI Lombardia da Rete ARPA - focus Pianura",
+         col.regions = colorRampPalette(c('dark blue','blue','white','red','yellow')),
+         xlab='Data',ylab='log(Quota) (m)')
 print(p)
 
 
