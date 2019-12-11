@@ -10,6 +10,7 @@
 #=============================================================================
 
 ZEROT_R='zeroTlevelplot.R'
+ZEROT_lineare_R='zeroTlevelplot_lineare.R'
 
 
 putS3() {
@@ -39,7 +40,7 @@ do
 if [ $(date "+%H") == "06" ];
 then
    Rscript $ZEROT_R
-
+   
    # verifico se è andato a buon fine
    STATO=$?
    echo "STATO USCITA DA "$ $ZEROT_R" ====> "$STATO
@@ -57,7 +58,28 @@ then
          exit 1
        fi
    fi
+   rm -f *.png
+   
+   Rscript $ZEROT_lineare_R
+   
+   # verifico se è andato a buon fine
+   STATO=$?
+   echo "STATO USCITA DA "$ $ZEROT_lineare_R" ====> "$STATO
 
+   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
+   then
+       exit 1
+   else # caricamento su MINIO
+       putS3 . *.png zeroT/ rete-monitoraggio
+
+       # controllo sul caricamento su MINIO
+       if [ $? -ne 0 ]
+       then
+         echo "problema caricamento su MINIO"
+         exit 1
+       fi
+   fi
+   
    rm -f *.png
    sleep 86400 # 1 giorno
 fi
