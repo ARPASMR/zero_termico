@@ -36,8 +36,8 @@ putS3() {
 #
 while [ 1 ]
 do
-# procedi sono se sono le 16
-if [ $(date "+%H") == "16" ];
+# procedi sono se sono le 08
+if [ $(date "+%H") == "08" ];
 then
    Rscript $ZEROT_R
    
