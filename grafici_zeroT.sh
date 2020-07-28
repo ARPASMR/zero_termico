@@ -79,8 +79,27 @@ then
          exit 1
        fi
    fi
-   
    rm -f *.png
+   
+   
+  ################# pulizia cartella di minio
+  periodo="35 days"
+  $S3CMD --config=config_minio.txt ls s3://rete-monitoraggio/zeroT/ | while read -r line;
+  do
+    createDate=`echo $line|awk {'print $1'}`
+    createDate=`date -d"$createDate" +%s`
+    olderThan=`date -d"-$periodo" +%s`
+    if [[ $createDate -lt $olderThan ]]
+      then
+        fileName=`echo $line|awk {'print $4'}`
+        if [[ $fileName != "" ]]
+          then
+          $S3CMD del "$fileName"
+        fi
+    fi
+  done;
+  
+   
    sleep 86400 # 1 giorno
 fi
 done
