@@ -83,7 +83,7 @@ then
    
    
   ################# pulizia cartella di minio
-  periodo="35 days"
+  periodo="5 days"
   $S3CMD --config=config_minio.txt ls s3://rete-monitoraggio/zeroT/ | while read -r line;
   do
     createDate=`echo $line|awk {'print $1'}`
