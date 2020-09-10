@@ -12,6 +12,7 @@
 ZEROT_R='zeroTlevelplot.R'
 ZEROT_lineare_R='zeroTlevelplot_lineare.R'
 
+S3CMD='s3cmd --config=config_minio.txt'
 
 putS3() {
   path=$1
