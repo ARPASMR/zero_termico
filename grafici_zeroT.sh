@@ -7,10 +7,13 @@
 # e li carica su Minio
 #
 # 2019/02/07 MR
+# 2020/09/22 MR inserita chiamata a unico file R per entrambi i grafici
+#               e inserita pulizia cartella di Minio
 #=============================================================================
 
-ZEROT_R='zeroTlevelplot.R'
-ZEROT_lineare_R='zeroTlevelplot_lineare.R'
+#ZEROT_R='zeroTlevelplot.R'
+#ZEROT_lineare_R='zeroTlevelplot_lineare.R'
+ZEROT_R='zeroT.R'
 
 S3CMD='s3cmd --config=config_minio.txt'
 
@@ -45,27 +48,6 @@ then
    # verifico se è andato a buon fine
    STATO=$?
    echo "STATO USCITA DA "$ $ZEROT_R" ====> "$STATO
-
-   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
-   then
-       exit 1
-   else # caricamento su MINIO
-       putS3 . *.png zeroT/ rete-monitoraggio
-
-       # controllo sul caricamento su MINIO
-       if [ $? -ne 0 ]
-       then
-         echo "problema caricamento su MINIO"
-         exit 1
-       fi
-   fi
-   rm -f *.png
-   
-   Rscript $ZEROT_lineare_R
-   
-   # verifico se è andato a buon fine
-   STATO=$?
-   echo "STATO USCITA DA "$ $ZEROT_lineare_R" ====> "$STATO
 
    if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
    then
