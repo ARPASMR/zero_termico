@@ -11,8 +11,6 @@
 #               e inserita pulizia cartella di Minio
 #=============================================================================
 
-#ZEROT_R='zeroTlevelplot.R'
-#ZEROT_lineare_R='zeroTlevelplot_lineare.R'
 ZEROT_R='zeroT.R'
 
 S3CMD='s3cmd --config=config_minio.txt'
@@ -41,8 +39,8 @@ putS3() {
 while [ 1 ]
 do
 # procedi sono se sono le 08
-if [ $(date "+%H") == "08" ];
-then
+#if [ $(date "+%H") == "08" ];
+#then
    Rscript $ZEROT_R
    
    # verifico se è andato a buon fine
@@ -53,12 +51,21 @@ then
    then
        exit 1
    else # caricamento su MINIO
-       putS3 . *.png zeroT/ rete-monitoraggio
+       putS3 . *_alpi.png zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
        if [ $? -ne 0 ]
        then
-         echo "problema caricamento su MINIO"
+         echo "problema caricamento file alpi su MINIO"
+         exit 1
+       fi
+       
+       putS3 . *_pianura.png zeroT/ rete-monitoraggio
+
+       # controllo sul caricamento su MINIO
+       if [ $? -ne 0 ]
+       then
+         echo "problema caricamento file pianura su MINIO"
          exit 1
        fi
    fi
@@ -83,7 +90,7 @@ then
   done;
   
    
-   sleep 86400 # 1 giorno
-fi
+   sleep 21600 # 6 ore
+#fi
 done
 exit 0
