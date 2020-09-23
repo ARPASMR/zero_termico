@@ -94,7 +94,7 @@ y<-unique(quota)
 
 ### GRAFICO LINEARE PER FOCUS ALPI
 
-png(paste("zeroT_",fine,"alpi.png",sep=""), width = 1500, height = 1000)
+png(paste("zeroT_",fine,"_alpi.png",sep=""), width = 1500, height = 1000)
 
 myPanel_lin <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
                 panel.levelplot(x=x, y=y, z=z, ..., subscripts=subscripts)
