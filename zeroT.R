@@ -137,7 +137,7 @@ myPanel_log <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
                 panel.text(x = x[pp], y = y[pp], labels = "o")
                 nn<-which(nev > 5)                                                                              # crocetta sui neve
                 panel.text(x = x[nn], y = y[nn], labels = "X",cex=2)
-                panel.text(x = x[1], y = y, labels = "#")                                                       # indicatore della quota dei rilevemnti
+                panel.text(x = x[1], y = y, labels = "-")                                                       # indicatore della quota dei rilevemnti
                }
 
 
