@@ -51,7 +51,7 @@ do
    then
        exit 1
    else # caricamento su MINIO e su ghost
-       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zeroT_alpi.png
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/
        putS3 . *_alpi.png zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
@@ -61,7 +61,7 @@ do
          exit 1
        fi
        
-       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zeroT_pianura.png
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/
        putS3 . *_pianura.png zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
