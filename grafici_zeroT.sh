@@ -50,7 +50,8 @@ do
    if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
    then
        exit 1
-   else # caricamento su MINIO
+   else # caricamento su MINIO e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zeroT_alpi.png
        putS3 . *_alpi.png zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
@@ -60,6 +61,7 @@ do
          exit 1
        fi
        
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zeroT_pianura.png
        putS3 . *_pianura.png zeroT/ rete-monitoraggio
 
        # controllo sul caricamento su MINIO
@@ -90,7 +92,7 @@ do
   done;
   
    
-   sleep 21600 # 6 ore
+   sleep 10800 # 3 ore
 #fi
 done
 exit 0
