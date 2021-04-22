@@ -7,4 +7,5 @@ RUN apt-get update
 RUN apt-get install -y s3cmd
 RUN apt-get install -y vim
 RUN apt-get install -y sshpass
+RUN apt-get install -y imagemagick
 CMD ["./grafici_zeroT.sh"]
