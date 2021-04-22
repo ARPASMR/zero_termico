@@ -7,10 +7,11 @@
 #  MR 14/09/2020 estrazione pluv e neve da stessa query delle temp      #
 #                per migliore gestione dati da unico df                 #
 #########################################################################
-
-#-----------------------------------------------------------------------
-inizio <- Sys.Date()-4
+#---------------------------------------------------------------------
+inizio <- Sys.Date()-6
 fine <- Sys.Date()+1
+width = 2500
+height = 1000
 #----------------------------------------------------------------------
 
 library(DBI)
@@ -94,7 +95,7 @@ y<-unique(quota)
 
 ### GRAFICO LINEARE PER FOCUS ALPI
 
-png(paste("zeroT_",fine,"_alpi.png",sep=""), width = 1500, height = 1000)
+png(paste("zeroT_",fine,"_alpi.png",sep=""), width = width, height = height)
 
 myPanel_lin <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
                 panel.levelplot(x=x, y=y, z=z, ..., subscripts=subscripts)
@@ -124,7 +125,7 @@ dev.off()
 
 ### GRAFICO SU SCALA LOGARITMICA PER FOCUS PIANURA
 
-png(paste("zeroT_",fine,"_pianura.png",sep=""), width = 1500, height = 1000)
+png(paste("zeroT_",fine,"_pianura.png",sep=""), width = width, height = height)
 
 myPanel_log <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
                 panel.levelplot(x=x, y=y, z=z, ..., subscripts=subscripts)
