@@ -12,37 +12,117 @@
 #=============================================================================
 
 ZEROT_R='zeroT.R'
-
-S3CMD='s3cmd --config=config_minio.txt'
-
-putS3() {
-  path=$1
-  file=$2
-  aws_path=$3
-  bucket=$4
-  date=$(date -R)
-  acl="x-amz-acl:public-read"
-  content_type='application/x-compressed-tar'
-  string="PUT\n\n$content_type\n$date\n$acl\n/$bucket/$aws_path$file"
-  signature=$(echo -en "${string}" | openssl sha1 -hmac "${S3SECRET}" -binary | base64)
-  curl -X PUT -T "$path/$file" \
-    --progress-bar \
-    -H "Host: $S3HOST" \
-    -H "Date: $date" \
-    -H "Content-Type: $content_type" \
-    -H "$acl" \
-    -H "Authorization: AWS ${S3KEY}:$signature" \
-    "http://$S3HOST/$bucket/$aws_path$file"
-}
+WIND_R='wind_Z.R'
+RELHUM_R='relhum_Z.R'
+RAD_R='radG_Z.R'
+#PRES_R='press_Z.R'
+WINDD_R='dirv_Z.R'
+PREC_R='prec_Z.R'
+#NIVO_R='nivo_Z.R'
 
 #
 while [ 1 ]
 do
-# procedi sono se sono le 08
-#if [ $(date "+%H") == "08" ];
-#then
+
+########################
+   Rscript $WINDD_R
+
+   # verifico se è andato a buon fine
+   STATO=$?
+   echo "STATO USCITA DA "$ $WINDD_R" ====> "$STATO
+
+   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
+   then
+       exit 1
+   else # caricamento e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/dirv/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/dirv_log/
+   fi
+   ## aggiungo a meteogramma e rimuovo
+   convert *_alpi.png Cattura.gif -append temporanea_alpi.gif
+   convert *_pianura.png Cattura.gif -append temporanea_pianura.gif
+   rm -f *.png
+
+########################
+   Rscript $WIND_R
+
+   # verifico se è andato a buon fine
+   STATO=$?
+   echo "STATO USCITA DA "$ $WIND_R" ====> "$STATO
+
+   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
+   then
+       exit 1
+   else # caricamento e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/velv/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/velv_log/
+   fi
+   ## aggiungo a meteogramma e rimuovo
+   convert *_alpi.png temporanea_alpi.gif -append temporanea_alpi.gif
+   convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
+   rm -f *.png
+
+########################
+   Rscript $RELHUM_R
+
+   # verifico se è andato a buon fine
+   STATO=$?
+   echo "STATO USCITA DA "$ $RELHUM_R" ====> "$STATO
+
+   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
+   then
+       exit 1
+   else # caricamento e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/relhum/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/relhum_log/
+   fi
+   ## aggiungo a meteogramma e rimuovo
+   convert *_alpi.png temporanea_alpi.gif -append temporanea_alpi.gif
+   convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
+   rm -f *.png
+
+########################
+   Rscript $RAD_R
+
+   # verifico se è andato a buon fine
+   STATO=$?
+   echo "STATO USCITA DA "$ $RAD_R" ====> "$STATO
+
+   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
+   then
+       exit 1
+   else # caricamento e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/rad/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/rad_log/
+   fi
+   ## aggiungo a meteogramma e rimuovo
+   convert *_alpi.png temporanea_alpi.gif -append temporanea_alpi.gif
+   convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
+   rm -f *.png
+
+
+########################
+   Rscript $PREC_R
+
+   # verifico se è andato a buon fine
+   STATO=$?
+   echo "STATO USCITA DA "$ $PREC_R" ====> "$STATO
+
+   if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
+   then
+       exit 1
+   else # caricamento e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/prec/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/prec_log/
+   fi
+   ## aggiungo a meteogramma e rimuovo
+   convert *_alpi.png temporanea_alpi.gif -append temporanea_alpi.gif
+   convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
+   rm -f *.png
+
+########################
    Rscript $ZEROT_R
-   
+
    # verifico se è andato a buon fine
    STATO=$?
    echo "STATO USCITA DA "$ $ZEROT_R" ====> "$STATO
@@ -50,49 +130,25 @@ do
    if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
    then
        exit 1
-   else # caricamento su MINIO e su ghost
-       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/
-       putS3 . *_alpi.png zeroT/ rete-monitoraggio
-
-       # controllo sul caricamento su MINIO
-       if [ $? -ne 0 ]
-       then
-         echo "problema caricamento file alpi su MINIO"
-         exit 1
-       fi
-       
-       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/
-       putS3 . *_pianura.png zeroT/ rete-monitoraggio
-
-       # controllo sul caricamento su MINIO
-       if [ $? -ne 0 ]
-       then
-         echo "problema caricamento file pianura su MINIO"
-         exit 1
-       fi
+   else # caricamento e su ghost
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/zeroT/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/zeroT_log/
    fi
+   ## aggiungo a meteogramma e rimuovo
+   convert *_alpi.png temporanea_alpi.gif -append temporanea_alpi.gif
+   convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
    rm -f *.png
-   
-   
-  ################# pulizia cartella di minio
-  periodo="5 days"
-  $S3CMD --config=config_minio.txt ls s3://rete-monitoraggio/zeroT/ | while read -r line;
-  do
-    createDate=`echo $line|awk {'print $1'}`
-    createDate=`date -d"$createDate" +%s`
-    olderThan=`date -d"-$periodo" +%s`
-    if [[ $createDate -lt $olderThan ]]
-      then
-        fileName=`echo $line|awk {'print $4'}`
-        if [[ $fileName != "" ]]
-          then
-          $S3CMD del "$fileName"
-        fi
-    fi
-  done;
-  
-   
+
+######################################
+
+  # assegno data a temporanea e copio tra i meteogrammi
+       mv temporanea_alpi.gif meteogramma_alpi.png
+       mv temporanea_pianura.gif meteogramma_pianura.png
+       sshpass -p $pwd_ghost scp *_alpi.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/meteogrammi/
+       sshpass -p $pwd_ghost scp *_pianura.png meteo@10.10.0.14:/var/www/html/prodottimeteo/SINERGICO/zero_T/immagini/meteogrammi_log/
+
    sleep 10800 # 3 ore
 #fi
 done
 exit 0
+
