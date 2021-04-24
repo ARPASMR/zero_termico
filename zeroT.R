@@ -113,7 +113,7 @@ myPanel_lin <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
 
 grafico_lineare <- levelplot (zvar ~ xvar * yvar, data = gdr,
                    panel=myPanel_lin,
-                   scales=list(y=list(cex=1 , at=c(300,600,900,1200,1800,2100,2400,2700,3000) ),x=list(at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
+                   scales=list(y=list(cex=1.5 , at=c(300,600,900,1200,1800,2100,2400,2700,3000) ),x=list(cex=1.5,at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
                    at= unique(c(seq(-20, -1, length=30),c(seq(-1, 1, length=11)),  c(seq(1, 20, length=30)))),
                    main="TEMPERATURE e PRECIPITAZIONI Lombardia da Rete ARPA",
                    col.regions = colorRampPalette(c('dark blue','blue','white','red','yellow')),
@@ -144,7 +144,7 @@ myPanel_log <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
 
         grafico_logaritmico <- levelplot (zvar ~ xvar * yvar, data = gdr,
          panel=myPanel_log,
-         scales=list(y=list(log=TRUE,cex=1 , at=c(10,50,100,200,300,400,500,600,800,1000,1200,1400,1600,1800,2000,2500) ),x=list(at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
+         scales=list(y=list(log=TRUE,cex=1.5 , at=c(10,50,100,200,300,400,500,600,800,1000,1200,1400,1600,1800,2000,2500) ),x=list(cex=1.5,at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
          at= unique(c(seq(-20, -1, length=30),c(seq(-1, 1, length=11)),  c(seq(1, 20, length=30)))),
          main="TEMPERATURE e PRECIPITAZIONI Lombardia da Rete ARPA - focus Pianura",
          col.regions = colorRampPalette(c('dark blue','blue','white','red','yellow')),
