@@ -1,4 +1,4 @@
-/bin/bash
+#/bin/bash
 #=============================================================================
 # Lo script è all'interno di un container
 #
