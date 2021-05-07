@@ -115,9 +115,28 @@ myPanel_lin <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
 grafico_lineare <- levelplot (zvar ~ xvar * yvar, data = gdr,
                    panel=myPanel_lin,
                    scales=list(y=list(cex=1.5 , at=c(300,600,900,1200,1800,2100,2400,2700,3000) ),x=list(cex=1.5,at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
-                   at= unique(c(seq(0, 50, length=21))),
+                   at= c(0.1,0.5,1,3,5,7,10,15,20,30,40,50,60,70,80,100,120,150),
                    main="PRECIPITAZIONI Lombardia da Rete ARPA",
-                   col.regions = colorRampPalette(c('white','blue','green','yellow','red')),
+                   col.regions = colorRampPalette(c(
+                                                  rgb(255, 255, 255,max=255),
+                                                  rgb(244, 221, 190,max=255),
+                                                  rgb(225, 185, 133,max=255),
+                                                  rgb(198, 211, 236,max=255),
+                                                  rgb(140, 166, 217,max=255),
+                                                  rgb(64, 106, 192,max=255),
+                                                  rgb(217, 243, 230,max=255),
+                                                  rgb(179, 230, 204,max=255),
+                                                  rgb(140, 217, 179,max=255),
+                                                  rgb(102, 204, 153,max=255),
+                                                  rgb(255, 255, 179,max=255),
+                                                  rgb(235, 235, 0,max=255),
+                                                  rgb(204, 204, 0,max=255),
+                                                  rgb(245, 163, 163,max=255),
+                                                  rgb(237, 85, 85,max=255),
+                                                  rgb(207, 23, 23,max=255),
+                                                  rgb(220, 158, 250,max=255),
+                                                  rgb(184, 61, 245,max=255)
+                                                    )),
                    xlab='Data',ylab='Quota (m)')
 
 print(grafico_lineare)
@@ -146,10 +165,29 @@ myPanel_log <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
         grafico_logaritmico <- levelplot (zvar ~ xvar * yvar, data = gdr,
          panel=myPanel_log,
          scales=list(y=list(log=TRUE,cex=1.5 , at=c(10,50,100,200,300,400,500,600,800,1000,1200,1400,1600,1800,2000,2500) ),x=list(cex=1.5,at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
-         at= unique(c(seq(0, 50, length=21))),
-         main="PRECIPITAZIONI Lombardia da Rete ARPA",
-         col.regions = colorRampPalette(c('white','blue','green','yellow','red')),
-         xlab='Data',ylab='log(Quota) (m)')
+                   at= c(0.1,0.5,1,3,5,7,10,15,20,30,40,50,60,70,80,100,120,150),
+                   main="PRECIPITAZIONI Lombardia da Rete ARPA",
+                   col.regions = colorRampPalette(c(
+                                                  rgb(255, 255, 255,max=255),
+                                                  rgb(244, 221, 190,max=255),
+                                                  rgb(225, 185, 133,max=255),
+                                                  rgb(198, 211, 236,max=255),
+                                                  rgb(140, 166, 217,max=255),
+                                                  rgb(64, 106, 192,max=255),
+                                                  rgb(217, 243, 230,max=255),
+                                                  rgb(179, 230, 204,max=255),
+                                                  rgb(140, 217, 179,max=255),
+                                                  rgb(102, 204, 153,max=255),
+                                                  rgb(255, 255, 179,max=255),
+                                                  rgb(235, 235, 0,max=255),
+                                                  rgb(204, 204, 0,max=255),
+                                                  rgb(245, 163, 163,max=255),
+                                                  rgb(237, 85, 85,max=255),
+                                                  rgb(207, 23, 23,max=255),
+                                                  rgb(220, 158, 250,max=255),
+                                                  rgb(184, 61, 245,max=255)
+                                                    )),
+                   xlab='Data',ylab='log(Quota) (m)')
 
 print(grafico_logaritmico)
 dev.off()
