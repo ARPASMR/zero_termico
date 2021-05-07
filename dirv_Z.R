@@ -120,7 +120,7 @@ grafico_lineare <- levelplot (zvar ~ xvar * yvar, data = gdr,
                    scales=list(y=list(cex=1.5 , at=c(300,600,900,1200,1800,2100,2400,2700,3000) ),x=list(cex=1.5,at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
                    at= unique(c(seq(0, 360, length=36))),
                    main="DIREZIONE VENTO Lombardia da Rete ARPA",
-                   col.regions = colorRampPalette(c('black','blue','blue','yellow','yellow','red','red','black')),
+                   col.regions = colorRampPalette(c('black','blue','blue','red','red','yellow','yellow','black')),
                    xlab='Data',ylab='Quota (m)')
 
 print(grafico_lineare)
@@ -151,7 +151,7 @@ myPanel_log <- function(x=xvar, y=yvar, z=zvar, ..., subscripts=subscripts) {
          scales=list(y=list(log=TRUE,cex=1.5 , at=c(10,50,100,200,300,400,500,600,800,1000,1200,1400,1600,1800,2000,2500) ),x=list(cex=1.5,at=c(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 day"))), format=("%d-%b %a")),
          at= unique(c(seq(0, 360, length=36))),
          main="DIREZIONE VENTO Lombardia da Rete ARPA - focus Pianura",
-         col.regions = colorRampPalette(c('black','blue','blue','yellow','yellow','red','red','black')),
+         col.regions = colorRampPalette(c('black','blue','blue','red','red','yellow','yellow','black')),
          xlab='Data',ylab='log(Quota) (m)')
 
 print(grafico_logaritmico)
