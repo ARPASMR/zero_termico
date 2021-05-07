@@ -21,12 +21,13 @@ WINDD_R='dirv_Z.R'
 PREC_R='prec_Z.R'
 #NIVO_R='nivo_Z.R'
 
-DATA_DOMANI=$(date -d "tomorrow" +%Y-%m-%d)
-METEOGRAMMA_ALPI="meteogramma_"$DATA_DOMANI"_alpi.png"
-METEOGRAMMA_PIANURA="meteogramma_"$DATA_DOMANI"_pianura.png"
 #
 while [ 1 ]
 do
+
+DATA_DOMANI=$(date -d "tomorrow" +%Y-%m-%d)
+METEOGRAMMA_ALPI="meteogramma_"$DATA_DOMANI"_alpi.png"
+METEOGRAMMA_PIANURA="meteogramma_"$DATA_DOMANI"_pianura.png"
 
 ########################
    Rscript $RAD_R
