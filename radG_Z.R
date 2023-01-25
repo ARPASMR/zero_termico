@@ -36,8 +36,7 @@ time<-as.POSIXct(seq(as.POSIXct(Tini),as.POSIXct(Tfin),by="1 hour"))
 # connessione al DB
 drv<-dbDriver("MySQL")
 #################
-#conn<-try(dbConnect(drv, user=as.character(Sys.getenv("MYSQL_USR")), password=as.character(Sys.getenv("MYSQL_PWD")), dbname=as.character(Sys.getenv("MYSQL_DBNAME")), host=as.character(Sys.getenv("MYSQL_HOST"))))
-conn<-try(dbConnect(drv, user=as.character(Sys.getenv("MYSQL_USR")), password=as.character(Sys.getenv("MYSQL_PWD")), dbname=as.character(Sys.getenv("MYSQL_DBNAME")), host=as.character(Sys.getenv("MYSQL_HOST")),port=as.numeric(Sys.getenv("MYSQL_PORT")) ))
+conn<-try(dbConnect(drv, user=as.character(Sys.getenv("MYSQL_USR")), password=as.character(Sys.getenv("MYSQL_PWD")), dbname=as.character(Sys.getenv("MYSQL_DBNAME")), host=as.character(Sys.getenv("MYSQL_HOST")), port=as.numeric(Sys.getenv("MYSQL_PORT"))))
 #################
 if (inherits(conn,"try-error")) {
   print( "ERRORE nell'apertura della connessione al DB \n")
