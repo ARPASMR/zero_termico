@@ -56,7 +56,7 @@ if (inherits(conn,"try-error")) {
 
 ########## LETTURA DELLE MISURE
 
- condizioni <- paste('DataInizio is not NULL and IDrete in (1,4) and Storico="NO" and sn.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) and Flag_manuale in ("M","G") and Flag_manuale_DBunico not in (100,101,102) and Data_e_ora>"',inizio,'" and Data_e_ora<="',fine,'"',sep='')
+ condizioni <- paste('DataInizio is not NULL and st.IDstazione!=857 and IDrete in (1,4) and Storico="NO" and sn.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) and Flag_manuale in ("M","G") and Flag_manuale_DBunico not in (100,101,102) and Data_e_ora>"',inizio,'" and Data_e_ora<="',fine,'"',sep='')
 
  select_grandezze1 <- 'select st.IDstazione, st.Quota, g.Misura as Grandezza, g.Data_e_ora FROM A_Stazioni as st, A_Sensori as sn'
  select_grandezze2 <- paste('as g WHERE st.IDstazione=sn.IDstazione and sn.IDsensore=g.IDsensore and ',condizioni)

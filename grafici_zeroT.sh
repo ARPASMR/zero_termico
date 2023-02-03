@@ -13,6 +13,7 @@
 # 2022/11/09 MR adeguato a DBmeteo dockerizzato e output su ghost3 
 #=============================================================================
 
+
 ZEROT_R='zeroT.R'
 WIND_R='wind_Z.R'
 RELHUM_R='relhum_Z.R'
@@ -21,7 +22,6 @@ RAD_R='radG_Z.R'
 WINDD_R='dirv_Z.R'
 PREC_R='prec_Z.R'
 #NIVO_R='nivo_Z.R'
-
 #
 while [ 1 ]
 do
@@ -89,7 +89,7 @@ METEOGRAMMA_PIANURA="meteogramma_"$DATA_DOMANI"_pianura.png"
    convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
    rm -f *.png
 
-#########################
+########################
    Rscript $WIND_R
 
    # verifico se è andato a buon fine
@@ -127,7 +127,7 @@ METEOGRAMMA_PIANURA="meteogramma_"$DATA_DOMANI"_pianura.png"
    convert *_pianura.png temporanea_pianura.gif -append temporanea_pianura.gif
    rm -f *.png
 
-#########################
+########################
    Rscript $ZEROT_R
 
    # verifico se è andato a buon fine
